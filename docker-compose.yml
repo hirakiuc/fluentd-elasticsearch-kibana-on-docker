@@ -1,0 +1,26 @@
+fluentd:
+  build: ./fluentd
+  links:
+    - "elasticsearch"
+  ports:
+    - "22422:22422"
+  volumes:
+    - ./fluentd/data/:/fluentd/root/
+
+elasticsearch:
+  image: elasticsearch:alpine
+  ports:
+    - 9200
+    - 9300
+  volumes:
+    - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    - ./elasticsearch/data/:/usr/share/elasticsearch/data/
+  environment:
+    - ES_JAVA_OPTS=-Xms512M -Xmx512M
+
+kibana:
+  image: kibana
+  links:
+    - "elasticsearch"
+  ports:
+    - "5601:5601"
